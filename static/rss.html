@@ -394,7 +394,7 @@
                 <p>搜索公众号并添加 RSS 订阅，文章自动更新</p>
             </div>
             <div class="header-actions">
-                <a href="/admin.html" class="btn-sm">返回面板</a>
+                <a href="admin.html" class="btn-sm">返回面板</a>
                 <button class="btn-sm btn-primary" onclick="triggerPoll()">立即轮询</button>
             </div>
         </div>
@@ -446,8 +446,8 @@
         <div class="footer">
             <span>WeChat Download API v1.0.0</span>
             <div class="footer-links">
-                <a href="/admin.html">管理面板</a>
-                <a href="/api/docs" target="_blank">API 文档</a>
+                <a href="admin.html">管理面板</a>
+                <a href="api/docs" target="_blank">API 文档</a>
                 <a href="https://github.com/tmwgsicp/wechat-download-api" target="_blank">GitHub</a>
             </div>
         </div>
@@ -466,7 +466,7 @@
 
         async function loadStatus() {
             try {
-                var res = await fetch('/api/rss/status');
+                var res = await fetch('api/rss/status');
                 var d = await res.json();
                 var dot = document.getElementById('pollerDot');
                 var text = document.getElementById('pollerText');
@@ -485,7 +485,7 @@
 
         async function loadCategories() {
             try {
-                var res = await fetch('/api/admin/categories');
+                var res = await fetch('api/admin/categories');
                 var d = await res.json();
                 categoriesCache = d.categories || [];
             } catch (e) {
@@ -496,7 +496,7 @@
         async function loadSubscriptions() {
             var el = document.getElementById('subList');
             try {
-                var res = await fetch('/api/rss/subscriptions');
+                var res = await fetch('api/rss/subscriptions');
                 var d = await res.json();
                 if (!d.success || !d.data || d.data.length === 0) {
                     el.innerHTML = '<div class="sub-empty">暂无订阅，搜索公众号后添加</div>';
@@ -541,7 +541,7 @@
 
         async function setCategory(fakeid, categoryId) {
             try {
-                var res = await fetch('/api/admin/subscriptions/' + encodeURIComponent(fakeid) + '/category', {
+                var res = await fetch('api/admin/subscriptions/' + encodeURIComponent(fakeid) + '/category', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ category_id: categoryId ? parseInt(categoryId) : null })
@@ -565,7 +565,7 @@
             panel.innerHTML = '';
 
             try {
-                var res = await fetch('/api/public/searchbiz?query=' + encodeURIComponent(q));
+                var res = await fetch('api/public/searchbiz?query=' + encodeURIComponent(q));
                 var d = await res.json();
                 if (!d.success || !d.data || !d.data.list || d.data.list.length === 0) {
                     panel.className = 'search-results visible';
@@ -603,7 +603,7 @@
             btnEl.disabled = true;
             btnEl.textContent = '添加中...';
             try {
-                var res = await fetch('/api/rss/subscribe', {
+                var res = await fetch('api/rss/subscribe', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fakeid: fakeid, nickname: nickname, alias: alias, head_img: headImg })
@@ -630,7 +630,7 @@
         async function doUnsub(fakeid) {
             if (!confirm('确定取消订阅？该公众号的缓存文章也将被删除。')) return;
             try {
-                var res = await fetch('/api/rss/subscribe/' + encodeURIComponent(fakeid), { method: 'DELETE' });
+                var res = await fetch('api/rss/subscribe/' + encodeURIComponent(fakeid), { method: 'DELETE' });
                 var d = await res.json();
                 showToast(d.message || (d.success ? '已取消' : '操作失败'));
                 loadSubscriptions();
@@ -659,7 +659,7 @@
         async function triggerPoll() {
             showToast('正在轮询...');
             try {
-                var res = await fetch('/api/rss/poll', { method: 'POST' });
+                var res = await fetch('api/rss/poll', { method: 'POST' });
                 var d = await res.json();
                 showToast(d.data && d.data.message ? d.data.message : '轮询完成');
                 loadSubscriptions();
@@ -681,7 +681,8 @@
         function updateAggRssBar(hasSubs) {
             var bar = document.getElementById('aggRssBar');
             if (hasSubs) {
-                var url = window.location.origin + '/api/rss/all';
+                var baseUrl = document.querySelector('base') ? document.querySelector('base').href : window.location.origin + '/';
+                var url = baseUrl + 'api/rss/all';
                 document.getElementById('aggRssUrl').textContent = url;
                 bar.style.display = 'block';
             } else {
@@ -696,7 +697,7 @@
 
         function doExport(format) {
             document.getElementById('exportMenu').style.display = 'none';
-            window.location.href = '/api/rss/export?format=' + format;
+            window.location.href = 'api/rss/export?format=' + format;
         }
 
         document.addEventListener('click', function(e) {

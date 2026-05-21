@@ -150,7 +150,7 @@
         <div class="status-msg waiting" id="status">正在加载二维码...</div>
 
         <button class="btn" onclick="refreshQrcode()">刷新二维码</button>
-        <a href="/admin.html" class="back-link">返回管理面板</a>
+        <a href="admin.html" class="back-link">返回管理面板</a>
     </div>
 
     <script>
@@ -166,7 +166,7 @@
 
         async function startLogin() {
             try {
-                await fetch('/api/login/session/' + sessionid, { method: 'POST' });
+                await fetch('api/login/session/' + sessionid, { method: 'POST' });
             } catch (e) {
                 console.error('session error:', e);
             }
@@ -190,14 +190,14 @@
                 setStatus('error', '二维码加载失败，请刷新重试');
             };
 
-            img.src = '/api/login/getqrcode?rnd=' + Math.random();
+            img.src = 'api/login/getqrcode?rnd=' + Math.random();
         }
 
         async function startCheckQrcode() {
             if (checkTimer) clearTimeout(checkTimer);
 
             try {
-                const res = await fetch('/api/login/scan');
+                const res = await fetch('api/login/scan');
                 const data = await res.json();
 
                 if (data.base_resp && data.base_resp.ret !== 0) {
@@ -239,7 +239,7 @@
 
         async function completeLogin() {
             try {
-                const res = await fetch('/api/login/bizlogin', {
+                const res = await fetch('api/login/bizlogin', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -248,7 +248,7 @@
                 if (data.success && data.data) {
                     setStatus('success', '登录成功 — ' + (data.data.nickname || ''));
                     setTimeout(function () {
-                        window.location.href = '/admin.html';
+                        window.location.href = 'admin.html';
                     }, 1500);
                 } else {
                     setStatus('error', '登录失败: ' + (data.error || '未知错误'));

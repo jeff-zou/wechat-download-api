@@ -152,7 +152,7 @@
                 <h1>分类管理</h1>
                 <p>创建分类并将订阅分组，每个分类生成独立的 RSS 聚合链接</p>
             </div>
-            <a href="/admin.html" class="btn-sm">返回面板</a>
+            <a href="admin.html" class="btn-sm">返回面板</a>
         </div>
 
         <div class="section">
@@ -180,8 +180,8 @@
         <div class="footer">
             <span>WeChat Download API</span>
             <div class="footer-links">
-                <a href="/admin.html">管理面板</a>
-                <a href="/rss.html">RSS 订阅</a>
+                <a href="admin.html">管理面板</a>
+                <a href="rss.html">RSS 订阅</a>
             </div>
         </div>
     </div>
@@ -210,15 +210,16 @@
         async function loadCategories() {
             var el = document.getElementById('categoryList');
             try {
-                var res = await fetch('/api/admin/categories');
+                var res = await fetch('api/admin/categories');
                 var d = await res.json();
                 if (!d.categories || d.categories.length === 0) {
                     el.innerHTML = '<div class="empty">暂无分类，请先创建</div>';
                     return;
                 }
+                var baseUrl = document.querySelector('base') ? document.querySelector('base').href : window.location.origin + '/';
                 var html = '';
                 d.categories.forEach(function(cat) {
-                    var rssUrl = window.location.origin + '/api/rss/category/' + cat.id;
+                    var rssUrl = baseUrl + 'api/rss/category/' + cat.id;
                     html += '<div class="category-card">';
                     html += '<div class="category-color" style="background:' + (cat.color || '#1890ff') + ';"></div>';
                     html += '<div class="category-info">';
@@ -243,7 +244,7 @@
             var desc = document.getElementById('descInput').value.trim();
             if (!name) { showToast('请输入分类名称'); return; }
             try {
-                var res = await fetch('/api/admin/categories', {
+                var res = await fetch('api/admin/categories', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name, description: desc, color: selectedColor })
@@ -263,7 +264,7 @@
         async function deleteCategory(id) {
             if (!confirm('确定删除此分类？分类下的订阅不会被删除，仅取消分类关联。')) return;
             try {
-                var res = await fetch('/api/admin/categories/' + id, { method: 'DELETE' });
+                var res = await fetch('api/admin/categories/' + id, { method: 'DELETE' });
                 var d = await res.json();
                 showToast(d.message || (d.success ? '已删除' : '操作失败'));
                 loadCategories();
