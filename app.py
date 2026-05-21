@@ -116,10 +116,12 @@ if PATH_PREFIX:
                 body = body.replace("<head>", f"<head>{base_tag}", 1)
             elif "<HEAD>" in body:
                 body = body.replace("<HEAD>", f"<HEAD>{base_tag}", 1)
+            headers = dict(response.headers)
+            headers.pop("content-length", None)
             return Response(
                 content=body,
                 status_code=response.status_code,
-                headers=dict(response.headers),
+                headers=headers,
                 media_type=response.media_type,
             )
 
