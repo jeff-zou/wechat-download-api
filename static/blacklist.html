@@ -142,7 +142,7 @@
                 <h1>黑名单管理</h1>
                 <p>管理高频触发验证码的公众号，黑名单中的公众号将跳过轮询</p>
             </div>
-            <a href="/admin.html" class="btn-sm">返回面板</a>
+            <a href="admin.html" class="btn-sm">返回面板</a>
         </div>
 
         <div class="section">
@@ -162,8 +162,8 @@
         <div class="footer">
             <span>WeChat Download API</span>
             <div class="footer-links">
-                <a href="/admin.html">管理面板</a>
-                <a href="/rss.html">RSS 订阅</a>
+                <a href="admin.html">管理面板</a>
+                <a href="rss.html">RSS 订阅</a>
             </div>
         </div>
     </div>
@@ -182,7 +182,7 @@
         async function loadBlacklist() {
             var el = document.getElementById('listContainer');
             try {
-                var res = await fetch('/api/admin/blacklist');
+                var res = await fetch('api/admin/blacklist');
                 var d = await res.json();
                 if (!d.blacklist || d.blacklist.length === 0) {
                     el.innerHTML = '<div class="empty">暂无黑名单记录</div>';
@@ -220,7 +220,7 @@
             var nickname = document.getElementById('nicknameInput').value.trim();
             if (!fakeid) { showToast('请输入 FakeID'); return; }
             try {
-                var res = await fetch('/api/admin/blacklist', {
+                var res = await fetch('api/admin/blacklist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fakeid: fakeid, nickname: nickname, reason: 'manual' })
@@ -240,7 +240,7 @@
         async function removeFromBlacklist(fakeid) {
             if (!confirm('确定从黑名单移除？移除后该公众号将恢复正常轮询。')) return;
             try {
-                var res = await fetch('/api/admin/blacklist/' + encodeURIComponent(fakeid), { method: 'DELETE' });
+                var res = await fetch('api/admin/blacklist/' + encodeURIComponent(fakeid), { method: 'DELETE' });
                 var d = await res.json();
                 showToast(d.message || (d.success ? '已移除' : '操作失败'));
                 loadBlacklist();
@@ -252,7 +252,7 @@
         async function deleteRecord(id) {
             if (!confirm('确定永久删除此记录？')) return;
             try {
-                var res = await fetch('/api/admin/blacklist/record/' + id, { method: 'DELETE' });
+                var res = await fetch('api/admin/blacklist/record/' + id, { method: 'DELETE' });
                 var d = await res.json();
                 showToast(d.message || (d.success ? '已删除' : '操作失败'));
                 loadBlacklist();

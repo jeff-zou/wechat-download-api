@@ -14,9 +14,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 
@@ -84,6 +85,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# 反向代理路径前缀（如 /wechat/crawler）
+PATH_PREFIX = os.getenv("PATH_PREFIX", "").strip().rstrip("/")
+
 # CORS配置
 app.add_middleware(
     CORSMiddleware,
@@ -92,6 +96,34 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 注入 <base> 标签中间件：让静态 HTML 中的相对路径自动带上反向代理前缀
+if PATH_PREFIX:
+    from starlette.middleware.base import BaseHTTPMiddleware
+
+    class BaseTagMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request: Request, call_next):
+            response = await call_next(request)
+            ct = response.headers.get("content-type", "")
+            if "text/html" not in ct:
+                return response
+            chunks = []
+            async for chunk in response.body_iterator:
+                chunks.append(chunk if isinstance(chunk, bytes) else chunk.encode())
+            body = b"".join(chunks).decode("utf-8", errors="replace")
+            base_tag = f'<base href="{PATH_PREFIX}/">'
+            if "<head>" in body:
+                body = body.replace("<head>", f"<head>{base_tag}", 1)
+            elif "<HEAD>" in body:
+                body = body.replace("<HEAD>", f"<HEAD>{base_tag}", 1)
+            return Response(
+                content=body,
+                status_code=response.status_code,
+                headers=dict(response.headers),
+                media_type=response.media_type,
+            )
+
+    app.add_middleware(BaseTagMiddleware)
 
 # 注册路由（注意：articles.router 必须在 search.router 之前注册，避免路由冲突）
 app.include_router(health.router, prefix="/api", tags=["健康检查"])

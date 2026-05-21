@@ -521,9 +521,9 @@
                     </div>
                 </div>
                 <ul class="nav-list">
-                    <li><a href="/login.html"><span>扫码登录</span><span class="arrow">&#8250;</span></a></li>
-                    <li><a href="/verify.html"><span>验证处理</span><span class="arrow">&#8250;</span></a></li>
-                    <li><a href="/rss.html"><span>RSS 订阅</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="login.html"><span>扫码登录</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="verify.html"><span>验证处理</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="rss.html"><span>RSS 订阅</span><span class="arrow">&#8250;</span></a></li>
                 </ul>
             </div>
 
@@ -545,8 +545,8 @@
                     </div>
                 </div>
                 <ul class="nav-list">
-                    <li><a href="/api/docs" target="_blank"><span>Swagger UI</span><span class="arrow">&#8250;</span></a></li>
-                    <li><a href="/api/redoc" target="_blank"><span>ReDoc</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="api/docs" target="_blank"><span>Swagger UI</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="api/redoc" target="_blank"><span>ReDoc</span><span class="arrow">&#8250;</span></a></li>
                 </ul>
             </div>
 
@@ -566,8 +566,8 @@
                     </div>
                 </div>
                 <ul class="nav-list">
-                    <li><a href="/api/health" target="_blank"><span>健康检查</span><span class="arrow">&#8250;</span></a></li>
-                    <li><a href="/api/stats" target="_blank"><span>限频统计</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="api/health" target="_blank"><span>健康检查</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="api/stats" target="_blank"><span>限频统计</span><span class="arrow">&#8250;</span></a></li>
                 </ul>
             </div>
 
@@ -586,9 +586,9 @@
                     </div>
                 </div>
                 <ul class="nav-list">
-                    <li><a href="/categories.html"><span>分类管理</span><span class="arrow">&#8250;</span></a></li>
-                    <li><a href="/blacklist.html"><span>黑名单管理</span><span class="arrow">&#8250;</span></a></li>
-                    <li><a href="/history.html"><span>历史文章</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="categories.html"><span>分类管理</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="blacklist.html"><span>黑名单管理</span><span class="arrow">&#8250;</span></a></li>
+                    <li><a href="history.html"><span>历史文章</span><span class="arrow">&#8250;</span></a></li>
                 </ul>
             </div>
 
@@ -625,7 +625,7 @@
         <div class="footer">
             <span>WeChat Download API v1.0.0</span>
             <div class="footer-links">
-                <a href="/api/openapi.json" target="_blank">OpenAPI</a>
+                <a href="api/openapi.json" target="_blank">OpenAPI</a>
                 <a href="https://github.com/tmwgsicp/wechat-download-api" target="_blank">GitHub</a>
             </div>
         </div>
@@ -644,7 +644,7 @@
             detail.textContent = '';
 
             try {
-                var res = await fetch('/api/admin/status');
+                var res = await fetch('api/admin/status');
                 var data = await res.json();
 
                 if (data.authenticated) {
@@ -674,7 +674,7 @@
 
                     actions.innerHTML =
                         '<button class="btn-sm" onclick="checkStatus()">刷新</button>' +
-                        '<a href="/login.html" class="btn-sm btn-primary" style="text-decoration:none;display:inline-block;">去登录</a>';
+                        '<a href="login.html" class="btn-sm btn-primary" style="text-decoration:none;display:inline-block;">去登录</a>';
                 }
             } catch (e) {
                 icon.className = 'status-icon offline';
@@ -695,7 +695,7 @@
             actions.innerHTML = '';
 
             try {
-                var res = await fetch('/api/admin/logout', { method: 'POST' });
+                var res = await fetch('api/admin/logout', { method: 'POST' });
                 var data = await res.json();
 
                 if (data.success) {
@@ -733,7 +733,7 @@
             var startTime = Date.now();
 
             try {
-                var res = await fetch('/api/article', {
+                var res = await fetch('api/article', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: url })
